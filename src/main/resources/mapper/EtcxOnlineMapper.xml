@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanji.etcxobu.mapper.EtcxOnlineMapper">
+    
+    <resultMap type="EtcxOnline" id="EtcxOnlineResult">
+        <result property="snId"    column="SN_id"    />
+        <result property="olLong"    column="ol_long"    />
+        <result property="olLat"    column="ol_lat"    />
+        <result property="olType"    column="ol_type"    />
+        <result property="status"    column="status"    />
+        <result property="olEvent"    column="ol_event"    />
+        <result property="vehPlate"    column="veh_plate"    />
+    </resultMap>
+
+    <sql id="selectEtcxOnlineVo">
+        select SN_id, ol_long, ol_lat, ol_type, status, ol_event, veh_plate from etcx_online
+    </sql>
+
+    <select id="selectEtcxOnlineList" parameterType="EtcxOnline" resultMap="EtcxOnlineResult">
+        <include refid="selectEtcxOnlineVo"/>
+        <where>  
+            <if test="olLong != null  and olLong != ''"> and ol_long = #{olLong}</if>
+            <if test="olLat != null  and olLat != ''"> and ol_lat = #{olLat}</if>
+            <if test="olType != null  and olType != ''"> and ol_type like concat('%', #{olType}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="olEvent != null "> and ol_event = #{olEvent}</if>
+            <if test="vehPlate != null  and vehPlate != ''"> and veh_plate = #{vehPlate}</if>
+        </where>
+    </select>
+    
+    <select id="selectEtcxOnlineById" parameterType="String" resultMap="EtcxOnlineResult">
+        <include refid="selectEtcxOnlineVo"/>
+        where SN_id = #{snId}
+    </select>
+        
+    <insert id="insertEtcxOnline" parameterType="EtcxOnline">
+        insert into etcx_online
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="snId != null">SN_id,</if>
+            <if test="olLong != null">ol_long,</if>
+            <if test="olLat != null">ol_lat,</if>
+            <if test="olType != null">ol_type,</if>
+            <if test="status != null">status,</if>
+            <if test="olEvent != null">ol_event,</if>
+            <if test="vehPlate != null">veh_plate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="snId != null">#{snId},</if>
+            <if test="olLong != null">#{olLong},</if>
+            <if test="olLat != null">#{olLat},</if>
+            <if test="olType != null">#{olType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="olEvent != null">#{olEvent},</if>
+            <if test="vehPlate != null">#{vehPlate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEtcxOnline" parameterType="EtcxOnline">
+        update etcx_online
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="olLong != null">ol_long = #{olLong},</if>
+            <if test="olLat != null">ol_lat = #{olLat},</if>
+            <if test="olType != null">ol_type = #{olType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="olEvent != null">ol_event = #{olEvent},</if>
+            <if test="vehPlate != null">veh_plate = #{vehPlate},</if>
+        </trim>
+        where SN_id = #{snId}
+    </update>
+
+    <delete id="deleteEtcxOnlineById" parameterType="String">
+        delete from etcx_online where SN_id = #{snId}
+    </delete>
+
+    <delete id="deleteEtcxOnlineByIds" parameterType="String">
+        delete from etcx_online where SN_id in 
+        <foreach item="snId" collection="array" open="(" separator="," close=")">
+            #{snId}
+        </foreach>
+    </delete>
+</mapper>

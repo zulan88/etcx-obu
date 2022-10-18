@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanji.etcxobu.mapper.EtcxObuRouteMapper">
+    
+    <resultMap type="EtcxObuRoute" id="EtcxObuRouteResult">
+        <result property="id"    column="id"    />
+        <result property="obuSn"    column="obu_sn"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="obuRoute"    column="obu_route"    />
+        <result property="sessionId"    column="session_id"    />
+        <result property="routeDis"     column="route_dis"    />
+    </resultMap>
+
+    <sql id="selectEtcxObuRouteVo">
+        select id, obu_sn, start_time, end_time, obu_route, session_id, route_dis from etcx_obu_route
+    </sql>
+
+    <select id="selectEtcxObuRouteList" parameterType="EtcxObuRoute" resultMap="EtcxObuRouteResult">
+        <include refid="selectEtcxObuRouteVo"/>
+        <where>  
+            <if test="obuSn != null  and obuSn != ''"> and obu_sn = #{obuSn}</if>
+            <if test="startTime != null "> and DATE_FORMAT(start_time,'%Y-%m-%d') = DATE_FORMAT(#{startTime},'%Y-%m-%d')</if>
+            <if test="endTime != null "> and DATE_FORMAT(end_time,'%Y-%m-%d') = DATE_FORMAT(#{endTime},'%Y-%m-%d')</if>
+            <if test="obuRoute != null  and obuRoute != ''"> and obu_route = #{obuRoute}</if>
+            <if test="sessionId != null  and sessionId != ''"> and session_id = #{sessionId}</if>
+        </where>
+    </select>
+    
+    <select id="selectEtcxObuRouteById" parameterType="Long" resultMap="EtcxObuRouteResult">
+        <include refid="selectEtcxObuRouteVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEtcxObuRoute" parameterType="EtcxObuRoute" useGeneratedKeys="true" keyProperty="id">
+        insert into etcx_obu_route
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="obuSn != null">obu_sn,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="obuRoute != null">obu_route,</if>
+            <if test="sessionId != null">session_id,</if>
+            <if test="routeDis != null">route_dis,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="obuSn != null">#{obuSn},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="obuRoute != null">#{obuRoute},</if>
+            <if test="sessionId != null">#{sessionId},</if>
+            <if test="routeDis != null">#{routeDis},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEtcxObuRoute" parameterType="EtcxObuRoute">
+        update etcx_obu_route
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="obuSn != null">obu_sn = #{obuSn},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="obuRoute != null">obu_route = #{obuRoute},</if>
+            <if test="sessionId != null">session_id = #{sessionId},</if>
+            <if test="routeDis != null">route_dis = #{routeDis},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEtcxObuRouteById" parameterType="Long">
+        delete from etcx_obu_route where id = #{id}
+    </delete>
+
+    <delete id="deleteEtcxObuRouteByIds" parameterType="String">
+        delete from etcx_obu_route where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

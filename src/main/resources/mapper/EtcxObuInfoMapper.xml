@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanji.etcxobu.mapper.EtcxObuInfoMapper">
+    
+    <resultMap type="EtcxObuInfo" id="EtcxObuInfoResult">
+        <result property="obuSn"    column="obu_sn"    />
+        <result property="vehPlate"    column="veh_plate"    />
+        <result property="lastOlTime"    column="last_ol_time"    />
+        <result property="lastDistance"    column="last_distance"    />
+        <result property="cumulativeDistance"    column="cumulative_distance"    />
+        <result property="cumulativeOlTime"    column="cumulative_ol_time"    />
+        <result property="lastRoute"    column="last_route"    />
+        <result property="likeRoute"    column="like_route"    />
+        <result property="avgSpeed"     column="avg_speed"    />
+    </resultMap>
+
+    <sql id="selectEtcxObuInfoVo">
+        select obu_sn, veh_plate, last_ol_time, last_distance, cumulative_distance, cumulative_ol_time, last_route, like_route, avg_speed from etcx_obu_info
+    </sql>
+
+    <select id="selectEtcxObuInfoList" parameterType="EtcxObuInfo" resultMap="EtcxObuInfoResult">
+        <include refid="selectEtcxObuInfoVo"/>
+        <where>  
+            <if test="vehPlate != null  and vehPlate != ''"> and veh_plate = #{vehPlate}</if>
+            <if test="lastOlTime != null "> and last_ol_time = #{lastOlTime}</if>
+            <if test="lastDistance != null "> and last_distance = #{lastDistance}</if>
+            <if test="cumulativeDistance != null "> and cumulative_distance = #{cumulativeDistance}</if>
+            <if test="cumulativeOlTime != null "> and cumulative_ol_time = #{cumulativeOlTime}</if>
+            <if test="lastRoute != null  and lastRoute != ''"> and last_route = #{lastRoute}</if>
+            <if test="likeRoute != null  and likeRoute != ''"> and like_route = #{likeRoute}</if>
+        </where>
+    </select>
+    
+    <select id="selectEtcxObuInfoById" parameterType="String" resultMap="EtcxObuInfoResult">
+        <include refid="selectEtcxObuInfoVo"/>
+        where obu_sn = #{obuSn}
+    </select>
+        
+    <insert id="insertEtcxObuInfo" parameterType="EtcxObuInfo">
+        insert into etcx_obu_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="obuSn != null">obu_sn,</if>
+            <if test="vehPlate != null">veh_plate,</if>
+            <if test="lastOlTime != null">last_ol_time,</if>
+            <if test="lastDistance != null">last_distance,</if>
+            <if test="cumulativeDistance != null">cumulative_distance,</if>
+            <if test="cumulativeOlTime != null">cumulative_ol_time,</if>
+            <if test="lastRoute != null">last_route,</if>
+            <if test="likeRoute != null">like_route,</if>
+            <if test="avgSpeed != null">avg_speed,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="obuSn != null">#{obuSn},</if>
+            <if test="vehPlate != null">#{vehPlate},</if>
+            <if test="lastOlTime != null">#{lastOlTime},</if>
+            <if test="lastDistance != null">#{lastDistance},</if>
+            <if test="cumulativeDistance != null">#{cumulativeDistance},</if>
+            <if test="cumulativeOlTime != null">#{cumulativeOlTime},</if>
+            <if test="lastRoute != null">#{lastRoute},</if>
+            <if test="likeRoute != null">#{likeRoute},</if>
+            <if test="avgSpeed != null">#{avgSpeed},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEtcxObuInfo" parameterType="EtcxObuInfo">
+        update etcx_obu_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehPlate != null">veh_plate = #{vehPlate},</if>
+            <if test="lastOlTime != null">last_ol_time = #{lastOlTime},</if>
+            <if test="lastDistance != null">last_distance = #{lastDistance},</if>
+            <if test="cumulativeDistance != null">cumulative_distance = #{cumulativeDistance},</if>
+            <if test="cumulativeOlTime != null">cumulative_ol_time = #{cumulativeOlTime},</if>
+            <if test="lastRoute != null">last_route = #{lastRoute},</if>
+            <if test="likeRoute != null">like_route = #{likeRoute},</if>
+            <if test="avgSpeed != null">avg_speed = #{avgSpeed},</if>
+        </trim>
+        where obu_sn = #{obuSn}
+    </update>
+
+    <delete id="deleteEtcxObuInfoById" parameterType="String">
+        delete from etcx_obu_info where obu_sn = #{obuSn}
+    </delete>
+
+    <delete id="deleteEtcxObuInfoByIds" parameterType="String">
+        delete from etcx_obu_info where obu_sn in 
+        <foreach item="obuSn" collection="array" open="(" separator="," close=")">
+            #{obuSn}
+        </foreach>
+    </delete>
+</mapper>
